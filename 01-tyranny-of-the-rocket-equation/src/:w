@@ -1,0 +1,51 @@
+use std::env;
+use std::fs::File;
+
+use std::io;
+use std::i32;
+use std::io::{BufReader, BufRead};
+
+fn main() -> io::Result<()> {
+    let args: Vec<String> = env::args().collect();
+    let filename = parse_config(&args);
+
+    let input = File::open(filename)?;
+    let buffered = BufReader::new(input);
+
+    // total up all the module weights
+    let mut total_weight = 0;
+    for line in buffered.lines() {
+        let weight = line.unwrap().parse::<i32>().unwrap();
+        total_weight += weight;
+    }
+
+    let initial_fuel = fuel_cost(total_weight);
+    let mut additional_fuel = fuel_cost(initial_fuel);
+    let mut total_fuel = initial_fuel + additional_fuel;
+
+    println!("initial weight: {}", total_weight);
+    println!("initial fuel: {}", initial_fuel);
+
+    while additional_fuel > 0 {
+        additional_fuel = fuel_cost(additional_fuel);
+        total_fuel += additional_fuel;
+        println!("total fuel: {} additional fuel: {}", total_fuel, additional_fuel);
+    }
+
+    Ok(())
+}
+
+fn fuel_cost(weight: i32) -> i32 {
+    let div = weight / 3;
+    let two = div - 2;
+    if two > 0 {
+        return two;
+    } else {
+        return 0;
+    }
+}
+
+fn parse_config(args: &[String]) -> (&str) {
+    let filename = &args[1];
+    (filename)
+}
