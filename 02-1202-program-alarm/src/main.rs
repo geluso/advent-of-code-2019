@@ -28,57 +28,57 @@ fn main() -> io::Result<()> {
 
     // print a vector with {:?}
     // pretty print a vector with {:#?}
-    println!("codes: {:?}", codes);
+    // println!("codes: {:?}", codes);
 
     let mut strip = vec![];
     for code in &codes {
         let nn = code.parse::<usize>().unwrap();
         strip.push(nn);
     }
-    println!("codes: {:?}", strip);
 
-    // replace value 1 with 12
-    // replace value 2 with 02
-    strip[1] = 12;
-    strip[2] = 2;
+    let seeking = 19690720;
+    for noun in 0..=99 {
+        for verb in 0..=99 {
+            strip[1] = noun;
+            strip[2] = verb;
 
+            let mut fresh_strip = strip.clone();
+            let result = compute(&mut fresh_strip);
+            if result == seeking {
+                println!("{} {}", noun, verb);                       
+            }
+        }
+    }
+
+    Ok(())
+}
+
+fn compute(strip: &mut Vec<usize>) -> usize {
     let mut is_running = true;
     let mut index = 0;
     while is_running {
-        println!("{}", strip[index]);
-
         let op_code = strip[index];
         if op_code == 99 {
-            println!("quit");
             is_running = false;
         } else {
             let i1 = strip[index + 1];
             let i2 = strip[index + 2];
             let dest = strip[index + 3];
             let mut val = strip[dest];
-            println!("was: {} {} i[{}]={}", i1, i2, dest, val);
 
             if op_code == 1 {
-                println!("add");
-                add(&mut strip, index);
+                add(strip, index);
             } else if op_code == 2 {
-                println!("mult");
-                mult(&mut strip, index);
+                mult(strip, index);
             }
 
             val = strip[dest];
-            println!("now: {} {} i[{}]={}", i1, i2, dest, val);
-
             index += 4
         }
-
-        println!("codes: {:?}", strip);
     }
 
     // what's the value at 0?
-    println!("{}", strip[0]);
-
-    Ok(())
+    return strip[0];
 }
 
 fn add(strip: &mut Vec<usize>, index: usize) {
