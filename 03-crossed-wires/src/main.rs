@@ -14,23 +14,43 @@ fn main() -> io::Result<()> {
     let path1: Vec<&str> = paths[0].split(",").collect();
     let path2: Vec<&str> = paths[1].split(",").collect();
 
-    println!("path1 {:?}", &path1);
-    println!("path2 {:?}", &path2);
-
     let points1 = path_points(&path1);
     let points2 = path_points(&path2);
+
+    let mut is_first = true;
+    let mut min_distance = 0;
+
+    for intersect in points1.intersection(&points2) {
+        let coords: Vec<&str> = intersect.split(",").collect();
+        let mut xx = coords[0].parse::<i32>().unwrap();
+        let mut yy = coords[1].parse::<i32>().unwrap();
+
+        if xx < 0 {
+            xx = -xx;
+        }
+
+        if yy < 0 {
+            yy = -yy;
+        }
+
+        let distance = xx + yy;
+        if is_first || distance < min_distance {
+            is_first = false;
+            min_distance = distance;
+        }
+    }
+
+    println!("{}", min_distance);
 
     Ok(())
 }
 
 fn path_points(path: &Vec<&str> ) -> HashSet<String> {
     let mut points: HashSet<String> = HashSet::new();
-    points.insert("(0,0)".to_string());
 
     let mut xx: isize = 0;
     let mut yy: isize = 0;
     for direction in path {
-        println!("{}", direction);
         let (aa, bb) = point_to_point(&mut points, direction, xx, yy);
         xx = aa;
         yy = bb;
@@ -61,8 +81,7 @@ fn point_to_point(path: &mut HashSet<String>, direction: &str, mut xx: isize, mu
         xx += dx;
         yy += dy;
 
-        let coord = format!("({},{})", xx, yy);
-        println!("{}", coord);
+        let coord = format!("{},{}", xx, yy);
         path.insert(coord);
     }
 
