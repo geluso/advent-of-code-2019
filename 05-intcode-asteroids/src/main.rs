@@ -61,7 +61,7 @@ fn compute(strip: &mut Vec<isize>) -> isize {
     let mut is_running = true;
     let mut index: usize = 0;
     while is_running {
-        println!("{:?}", strip);
+        //println!("{:?}", strip);
 
         let instruction = strip[index];
         let op_code = instruction % 100;
@@ -70,7 +70,7 @@ fn compute(strip: &mut Vec<isize>) -> isize {
         let p2_mode = instruction / 1000 % 10;
         let p3_mode = 0; // writable addresses are never in immediate mode.
 
-        println!("op: {}", op_code);
+        //println!("op: {}", op_code);
 
         if op_code == 99 {
             is_running = false;
@@ -79,26 +79,26 @@ fn compute(strip: &mut Vec<isize>) -> isize {
             let n2 = strip[index + 2];
             let n3 = strip[index + 3];
 
-            println!("op strip {} {} {} {}", op_code, n1, n2, n3);
-            println!("mode1: {}", p1_mode);
-            println!("mode2: {}", p2_mode);
-            println!("mode3: {}", p3_mode);
+            //println!("op strip {} {} {} {}", op_code, n1, n2, n3);
+            //println!("mode1: {}", p1_mode);
+            //println!("mode2: {}", p2_mode);
+            //println!("mode3: {}", p3_mode);
 
             let n1 = get_param(&strip, p1_mode, n1 as usize);
             let n2 = get_param(&strip, p2_mode, n2 as usize);
             let dest = n3 as usize;
 
             if op_code == 1 {
-                println!("{}+{} to {}", n1, n2, dest);
+                //println!("{}+{} to {}", n1, n2, dest);
                 add(strip, n1, n2, dest);
             } else if op_code == 2 {
-                println!("{}*{} to {}", n1, n2, dest);
+                //println!("{}*{} to {}", n1, n2, dest);
                 mult(strip, n1, n2, dest);
             }
-            println!("");
+            //println!("");
 
             index += 4;
-        } else if op_code == 3 {
+        } else if op_code == 3 || op_code == 4 {
             let location = strip[index + 1] as usize;
 
             if op_code == 3 {
@@ -110,7 +110,7 @@ fn compute(strip: &mut Vec<isize>) -> isize {
 
             index += 2;
         }
-        println!("");
+        //println!("");
     }
 
     // what's the value at 0?
@@ -138,6 +138,8 @@ fn mult(strip: &mut Vec<isize>, n1: isize, n2: isize, dest: usize) {
 }
 
 fn input(strip: &mut Vec<isize>, dest: usize) {
+    println!("input:");
+
     let mut line = String::new();
     let stdin = io::stdin();
     stdin.lock().read_line(&mut line).unwrap();
