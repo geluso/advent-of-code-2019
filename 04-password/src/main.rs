@@ -1,5 +1,4 @@
 fn main() {
-    println!("Hello, world!");
     // It is a six-digit number.
     // The value is within the range given in your puzzle input.
     // Two adjacent digits are the same (like 22 in 122345).
@@ -30,15 +29,21 @@ fn possible(nn: usize) -> bool {
     let d5 = nn % 100_000 / 10_000;
     let d6 = nn % 1_000_000 / 100_000;
 
-    let mut same_digit = false;
-    if d1 == d2 || d2 == d3 || d3 == d4 || d4 == d5 || d5 == d6 {
-        same_digit = true;
+    let mut exactly_two_matching = false;
+    if d1 == d2 && d2 != d3 ||
+        d1 != d2 && d2 == d3 && d3 != d4 ||
+        d2 != d3 && d3 == d4 && d4 != d5 ||
+        d3 != d4 && d4 == d5 && d5 != d6 ||
+        d4 != d5 && d5 == d6
+    {
+        exactly_two_matching = true;
     }
+
 
     let mut always_increasing = false;
     if d6 <= d5 && d5 <= d4 && d4 <= d3 && d3 <= d2 && d2 <= d1 {
         always_increasing = true;
     }
 
-    return same_digit && always_increasing;
+    return exactly_two_matching && always_increasing;
 }
