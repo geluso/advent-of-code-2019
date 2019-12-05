@@ -79,7 +79,7 @@ fn compute(strip: &mut Vec<isize>) -> isize {
             let n2 = strip[index + 2];
             let n3 = strip[index + 3];
 
-            //println!("op strip {} {} {} {}", op_code, n1, n2, n3);
+            //println!("op strip {} {} {} {}", instruction, n1, n2, n3);
             //println!("mode1: {}", p1_mode);
             //println!("mode2: {}", p2_mode);
             //println!("mode3: {}", p3_mode);
@@ -100,17 +100,20 @@ fn compute(strip: &mut Vec<isize>) -> isize {
             index += 4;
         } else if op_code == 3 || op_code == 4 {
             let location = strip[index + 1] as usize;
+            //println!("op strip {} {}", instruction, location);
 
             if op_code == 3 {
                 input(strip, location);
             } else if op_code == 4 {
-                let value = strip[location];
-                output(value);
+                let n1 = strip[index + 1];
+                let n1 = get_param(&strip, p1_mode, n1 as usize);
+                output(n1);
             }
 
             index += 2;
         }
         //println!("");
+        //pause();
     }
 
     // what's the value at 0?
@@ -120,10 +123,12 @@ fn compute(strip: &mut Vec<isize>) -> isize {
 fn get_param(strip: &Vec<isize>, mode: isize, location: usize) -> isize { 
     // position mode
     if mode == 0 {
+        //println!("@{}={}", location, strip[location]);
         return strip[location];
     }
 
     // immediate mode
+    //println!("lit{}", location);
     return location as isize;
 }
 
@@ -150,6 +155,13 @@ fn input(strip: &mut Vec<isize>, dest: usize) {
 
 fn output(value: isize) {
     println!("{}", value);
+}
+
+fn pause() {
+    println!("continue:");
+    let mut line = String::new();
+    let stdin = io::stdin();
+    stdin.lock().read_line(&mut line).unwrap();
 }
 
 fn parse_config(args: &[String]) -> (&str) {
