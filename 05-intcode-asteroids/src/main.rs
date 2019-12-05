@@ -99,7 +99,7 @@ fn compute(strip: &mut Vec<isize>) -> isize {
 
             index += 4;
         } else if op_code == 3 {
-            let location = get_param(&strip, p1_mode, strip[index + 1] as usize) as usize;
+            let location = strip[index + 1] as usize;
 
             if op_code == 3 {
                 input(strip, location);
